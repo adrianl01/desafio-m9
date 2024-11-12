@@ -1,4 +1,3 @@
-import { use } from "react"
 import { User } from "../models/users"
 
 export async function getUserById(id: string) {
@@ -14,4 +13,19 @@ export async function updateUserAddress(id: string, newAddress: string) {
     user.data.address = newAddress
     await user.push()
     return user.data
+}
+export async function updateAddtionalUserData(id: string, newUserData: string) {
+    console.log("newUserData", newUserData)
+    const user = new User(id)
+    await user.pull()
+    user.data.additionalUserData = newUserData
+    await user.push()
+    return user.data
+}
+
+export async function getUserOrders(id: string) {
+    console.log("orders controller")
+    const user = new User(id)
+    const orders = await user.getUserOrders()
+    return orders
 }

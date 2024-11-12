@@ -1,5 +1,6 @@
 import { firestore } from "../lib/firestore";
-const collection = firestore.collection("orders");
+const collOrders = firestore.collection("orders");
+
 
 type OrderData = {
     additionalInfo: "",
@@ -14,7 +15,7 @@ export class Order {
     id: string
     constructor(id) {
         this.id = id
-        this.ref = collection.doc(id)
+        this.ref = collOrders.doc(id)
     }
     async pull() {
         const snap = await this.ref.get()
@@ -25,9 +26,16 @@ export class Order {
     }
 
     static async createNewOrder(newOrderdata = {}) {
-        const newOrderSnap = await collection.add(newOrderdata)
+        console.log("create New Order")
+        console.log(newOrderdata)
+        const newOrderSnap = await collOrders.add(newOrderdata)
         const newOrder = new Order(newOrderSnap.id)
         newOrder.data = newOrderdata as any
         return newOrder
+    }
+    async getUserOrderById() {
+        const order = collOrders.doc(this.id)
+        return (await order.get()).data()
+
     }
 }

@@ -1,5 +1,6 @@
 import { firestore } from "../lib/firestore";
-const collection = firestore.collection("users");
+const collUser = firestore.collection("users");
+const collOrders = firestore.collection("orders");
 
 export class User {
     ref: FirebaseFirestore.DocumentReference;
@@ -7,7 +8,7 @@ export class User {
     id: string
     constructor(id) {
         this.id = id
-        this.ref = collection.doc(id)
+        this.ref = collUser.doc(id)
     }
     async pull() {
         const snap = await this.ref.get()
@@ -17,9 +18,13 @@ export class User {
         this.ref.update(this.data)
     }
     static async createNewUser(data) {
-        const newUserSnap = await collection.add(data)
+        const newUserSnap = await collUser.add(data)
         const newUser = new User(newUserSnap.id)
         newUser.data = data
         return newUser
+    }
+    async getUserOrders() {
+        const users = collOrders.where("userId", "==", this.id)
+        users.get().then(e => e.docs.map(i => { return i.data() }))
     }
 }
