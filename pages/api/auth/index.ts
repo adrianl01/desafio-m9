@@ -6,8 +6,8 @@ import { runMiddleware } from "../../../lib/corsMiddleware";
 
 export default methods({
     async post(req: NextApiRequest, res: NextApiResponse) {
-        const { email } = req.body;
         await runMiddleware(req, res);
+        const { email } = req.body;
         if (!email) {
             res
                 .status(400)

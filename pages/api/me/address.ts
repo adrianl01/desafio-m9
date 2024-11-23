@@ -3,8 +3,10 @@ import methods from "micro-method-router"
 import parseToken from "parse-bearer-token"
 import { decode } from "jsonwebtoken";
 import { updateUserAddress } from "../../../controllers/users";
+import { runMiddleware } from "../../../lib/corsMiddleware";
 export default methods({
     async patch(req: NextApiRequest, res: NextApiResponse) {
+        await runMiddleware(req, res);
         const { address } = req.body
         const token = parseToken(req);
         if (!token) {

@@ -8,8 +8,8 @@ import { runMiddleware } from "../../../lib/corsMiddleware";
 
 export default methods({
     async post(req: NextApiRequest, res: NextApiResponse) {
-        const { email, code } = req.body as any;
         await runMiddleware(req, res);
+        const { email, code } = req.body as any;
         console.log("function api token");
         const newEmail = await Auth.findByEmail(email);
         if (code !== newEmail.data.code) {

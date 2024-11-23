@@ -6,8 +6,8 @@ import { runMiddleware } from "../../../lib/corsMiddleware";
 
 export default methods({
     async post(req: NextApiRequest, res: NextApiResponse) {
-        const { id, topic } = req.query;
         await runMiddleware(req, res);
+        const { id, topic } = req.query;
         if (topic == "merchant_order") {
             const order = await getMerchOrder({ merchantOrderId: id as string | number })
             if (order.order_status == "paid") {
