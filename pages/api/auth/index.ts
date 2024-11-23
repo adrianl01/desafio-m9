@@ -3,9 +3,11 @@ import { sendCode } from "../../../controllers/auth";
 import { sendEmail } from "../../../lib/mailjet";
 import methods from "micro-method-router"
 import { runMiddleware } from "../../../lib/corsMiddleware";
+import { middleware } from "../middleware";
 
 export default methods({
-    async post(req: NextApiRequest, res: NextApiResponse) {
+    async post(req, res) {
+        await middleware(req)
         await runMiddleware(req, res);
         const { email } = req.body;
         if (!email) {
