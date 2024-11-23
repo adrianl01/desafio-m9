@@ -3,9 +3,15 @@ import methods from "micro-method-router"
 import parseToken from "parse-bearer-token"
 import { decode } from "jsonwebtoken";
 import { getUserById, updateAddtionalUserData, updateUserAddress } from "../../../controllers/users";
+import { middleware } from "../middleware";
+
+
 
 export default methods({
     async get(req: NextApiRequest, res: NextApiResponse) {
+        console.log(req)
+        const midRes = await middleware(req as any)
+        console.log(midRes)
         const token = parseToken(req);
         if (!token) {
             res.status(401).send({ message: "no hay token" })
