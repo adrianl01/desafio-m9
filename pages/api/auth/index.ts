@@ -5,8 +5,7 @@ import methods from "micro-method-router"
 import { runMiddleware } from "../../../lib/corsMiddleware";
 import { middleware } from "../middleware";
 
-export default async function auth(req, res) {
-    await middleware(req)
+export default async function auth(req: NextApiRequest, res: NextApiResponse) {
     await runMiddleware(req, res);
     const { email } = req.body;
     if (!email) {
