@@ -4,14 +4,11 @@ import parseToken from "parse-bearer-token"
 import { decode } from "jsonwebtoken";
 import { getUserById, updateAddtionalUserData, updateUserAddress } from "../../../controllers/users";
 import { middleware } from "../middleware";
-
-
+import { runMiddleware } from "../../../lib/corsMiddleware";
 
 export default methods({
     async get(req: NextApiRequest, res: NextApiResponse) {
-        console.log(req)
-        const midRes = await middleware(req as any)
-        console.log(midRes)
+        await runMiddleware(req, res);
         const token = parseToken(req);
         if (!token) {
             res.status(401).send({ message: "no hay token" })
@@ -26,6 +23,7 @@ export default methods({
         }
     },
     async patch(req: NextApiRequest, res: NextApiResponse) {
+        await runMiddleware(req, res);
         const { additionalUserData } = req.body
         const token = parseToken(req);
         if (!token) {
@@ -40,7 +38,7 @@ export default methods({
         }
         res.send({ message: "patch method" })
     }
-})
+}, middleware)
 
 
 

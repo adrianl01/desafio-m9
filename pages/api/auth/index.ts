@@ -2,11 +2,18 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { sendCode } from "../../../controllers/auth";
 import { sendEmail } from "../../../lib/mailjet";
 import methods from "micro-method-router"
+import { runMiddleware } from "../../../lib/corsMiddleware";
 
 export default methods({
     async post(req: NextApiRequest, res: NextApiResponse) {
-        const auth = await sendCode(req.body.email)
-
+        const { email } = req.body;
+        await runMiddleware(req, res);
+        if (!email) {
+            res
+                .status(400)
+                .json({ message: "Debes ingresar un email para poder ingresar." });
+        }
+        const auth = await sendCode(email)
         // email sender comentado pero funcionando😉
         // const sendEmailRes = await sendEmail(auth.data)
         res.send(auth.data)

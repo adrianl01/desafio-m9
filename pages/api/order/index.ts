@@ -6,9 +6,11 @@ import { Order } from "../../../models/order";
 import { decode } from "../../../lib/jwt";
 import { productIndex } from "../../../lib/algolia";
 import methods from "micro-method-router"
+import { runMiddleware } from "../../../lib/corsMiddleware";
 
 export default methods({
     async post(req: NextApiRequest, res: NextApiResponse) {
+        await runMiddleware(req, res)
         const { productId } = req.query as any
         const token = parseToken(req) as any;
         const decodedToken = await decode(token) as any

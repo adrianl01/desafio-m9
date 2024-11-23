@@ -4,15 +4,14 @@ import { compareAsc } from "date-fns";
 import { generate } from "../../../lib/jwt";
 import { Auth } from "../../../models/auth";
 import { findOrCreateAuth } from "../../../controllers/auth";
-
+import { runMiddleware } from "../../../lib/corsMiddleware";
 
 export default methods({
     async post(req: NextApiRequest, res: NextApiResponse) {
         const { email, code } = req.body as any;
+        await runMiddleware(req, res);
         console.log("function api token");
-        console.log(req.body);
         const newEmail = await Auth.findByEmail(email);
-        console.log("email encontrado", newEmail.data)
         if (code !== newEmail.data.code) {
             res.status(401).send({ message: "Token Incorrecto" })
         }
