@@ -5,22 +5,21 @@ import methods from "micro-method-router"
 import { runMiddleware } from "../../../lib/corsMiddleware";
 import { middleware } from "../middleware";
 
-export default methods({
-    async post(req, res) {
-        await middleware(req)
-        await runMiddleware(req, res);
-        const { email } = req.body;
-        if (!email) {
-            res
-                .status(400)
-                .json({ message: "Debes ingresar un email para poder ingresar." });
-        }
-        const auth = await sendCode(email)
-        // email sender comentado pero funcionando😉
-        // const sendEmailRes = await sendEmail(auth.data)
-        res.send(auth.data)
+export default async function auth(req, res) {
+    await middleware(req)
+    await runMiddleware(req, res);
+    const { email } = req.body;
+    if (!email) {
+        res
+            .status(400)
+            .json({ message: "Debes ingresar un email para poder ingresar." });
     }
-})
+    const auth = await sendCode(email)
+    // email sender comentado pero funcionando😉
+    // const sendEmailRes = await sendEmail(auth.data)
+    res.send(auth.data)
+
+}
 
 
 
