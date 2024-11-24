@@ -1,12 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import methods from "micro-method-router"
 import parseToken from "parse-bearer-token"
 import { decode } from "jsonwebtoken";
 import { updateUserAddress } from "../../../controllers/users";
 import { runMiddleware } from "../../../lib/corsMiddleware";
-export default methods({
-    async patch(req: NextApiRequest, res: NextApiResponse) {
-        await runMiddleware(req, res);
+export default async function address(req: NextApiRequest, res: NextApiResponse) {
+    await runMiddleware(req, res);
+    if (req.method === "PATCH") {
         const { address } = req.body
         const token = parseToken(req);
         if (!token) {
@@ -19,7 +18,9 @@ export default methods({
         } else {
             res.status(401).send({ message: "token no autorizado" })
         }
-
         res.send({ message: "patch method" })
+    } else {
+        res.send({ message: "Method Not Allowed" })
     }
-})
+}
+

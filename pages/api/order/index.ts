@@ -5,23 +5,19 @@ import { User } from "../../../models/users";
 import { Order } from "../../../models/order";
 import { decode } from "../../../lib/jwt";
 import { productIndex } from "../../../lib/algolia";
-import methods from "micro-method-router"
 import { runMiddleware } from "../../../lib/corsMiddleware";
 
-export default methods({
-    async post(req: NextApiRequest, res: NextApiResponse) {
-        await runMiddleware(req, res)
-        const { productId } = req.query as any
+export default async function createOrder(req: NextApiRequest, res: NextApiResponse) {
+    await runMiddleware(req, res)
+    if (req.method === "POST") {
+        const { productId } = req.query as any;
         const token = parseToken(req) as any;
-        const decodedToken = await decode(token) as any
-        console.log("decodedToke", decodedToken)
-        if (!token) { res.status(401).send({ message: "No autorizado" }) }
-
+        const decodedToken = await decode(token) as any;
+        console.log("decodedToke", decodedToken);
+        if (!token) { res.status(401).send({ message: "No autorizado" }) };
         const resProduct = await productIndex.getObject(productId, {
             attributesToRetrieve: ['objectID', 'Name', 'Description', 'Images', 'Type', 'Unit_cost']
-        }) as any
-
-        console.log(resProduct)
+        }) as any;
         const order = await Order.createNewOrder({
             additionalInfo: {
                 title: resProduct.Name,
@@ -33,7 +29,6 @@ export default methods({
             userId: decodedToken.userId,
             status: "pending"
         })
-
         const user = new User(decodedToken.userId)
         user.pull()
         const resPref = await generatePreference({
@@ -63,5 +58,8 @@ export default methods({
             url: resPref.init_point,
             orderId: order.id
         })
+    } else {
+        res.send({ message: "Method Not Allowed" })
     }
-})    
+}
+

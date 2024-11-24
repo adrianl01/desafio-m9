@@ -4,9 +4,9 @@ import { Order } from "../../../models/order";
 import methods from "micro-method-router"
 import { runMiddleware } from "../../../lib/corsMiddleware";
 
-export default methods({
-    async post(req: NextApiRequest, res: NextApiResponse) {
-        await runMiddleware(req, res);
+export default async function ipn(req: NextApiRequest, res: NextApiResponse) {
+    await runMiddleware(req, res);
+    if (req.method === "POST") {
         const { id, topic } = req.query;
         if (topic == "merchant_order") {
             const order = await getMerchOrder({ merchantOrderId: id as string | number })
@@ -19,5 +19,7 @@ export default methods({
             }
             res.json(order);
         }
+    } else {
+        res.send({ message: "Method Not Allowed" })
     }
-}) 
+}

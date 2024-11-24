@@ -6,8 +6,8 @@ import { getUserById, updateAddtionalUserData, updateUserAddress } from "../../.
 import { middleware } from "../middleware";
 import { runMiddleware } from "../../../lib/corsMiddleware";
 
-export default methods({
-    async get(req: NextApiRequest, res: NextApiResponse) {
+export default async function me(req: NextApiRequest, res: NextApiResponse) {
+    if (req.method === "GET") {
         await runMiddleware(req, res);
         const token = parseToken(req);
         if (!token) {
@@ -21,9 +21,7 @@ export default methods({
         } else {
             res.status(401).send({ message: "token no autorizado" })
         }
-    },
-    async patch(req: NextApiRequest, res: NextApiResponse) {
-        await runMiddleware(req, res);
+    } else if (req.method === "PATCH") {
         const { additionalUserData } = req.body
         const token = parseToken(req);
         if (!token) {
@@ -37,8 +35,11 @@ export default methods({
             res.status(401).send({ message: "token no autorizado" })
         }
         res.send({ message: "patch method" })
+    } else {
+        res.send({ message: "Method Not Allowed" })
     }
-}, middleware)
+}
+
 
 
 

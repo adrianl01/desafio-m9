@@ -1,13 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import methods from "micro-method-router"
 import parseToken from "parse-bearer-token"
 import { decode } from "jsonwebtoken";
-import { getUserById, } from "../../../controllers/users";
 import { Order } from "../../../models/order";
-import order from ".";
+import { runMiddleware } from "../../../lib/corsMiddleware";
 
-export default methods({
-    async get(req: NextApiRequest, res: NextApiResponse) {
+export default async function order(req: NextApiRequest, res: NextApiResponse) {
+    await runMiddleware(req, res)
+    if (req.method === "GET") {
         const { orderId } = req.query as any
         console.log(orderId)
         const token = parseToken(req);
@@ -22,5 +21,7 @@ export default methods({
         } else {
             res.status(401).send({ message: "token no autorizado" })
         }
+    } else {
+        res.send({ message: "Method Not Allowed" })
     }
-})
+}

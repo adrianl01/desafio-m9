@@ -6,9 +6,10 @@ import { Auth } from "../../../models/auth";
 import { findOrCreateAuth } from "../../../controllers/auth";
 import { runMiddleware } from "../../../lib/corsMiddleware";
 
-export default methods({
-    async post(req: NextApiRequest, res: NextApiResponse) {
-        await runMiddleware(req, res);
+export default async function token(req: NextApiRequest, res: NextApiResponse) {
+    await runMiddleware(req, res);
+    if (req.method === "POST") {
+
         const { email, code } = req.body as any;
         console.log("function api token");
         const newEmail = await Auth.findByEmail(email);
@@ -33,5 +34,7 @@ export default methods({
             await auth.push();
             res.send({ token })
         }
+    } else {
+        res.send({ message: "Method Not Allowed" })
     }
-})
+}
