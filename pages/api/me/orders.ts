@@ -13,7 +13,7 @@ export default async function myOrders(req: NextApiRequest, res: NextApiResponse
         }
         const decodedToken = decode(token) as any
         if (decodedToken) {
-            const orders = await getUserOrders(decodedToken.userId) as any
+            const orders = await getUserOrders(decodedToken.userId) as any;
             if (orders.length == 0) { res.status(404).json({ message: "Aún no has realizado ninguna compra." }) } else {
                 res.send(orders)
             }

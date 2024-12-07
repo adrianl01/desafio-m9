@@ -8,11 +8,7 @@ export default async function search(req: NextApiRequest, res: NextApiResponse) 
     if (req.method === "GET") {
         const { offset, limit } = getOffsetAndLimitFromReq(req)
         const results = await productIndex.search(req.query.search as string, {
-            offset: offset, length: limit
-        })
-        results.hits.map(h => {
-            const result = h._highlightResult as any
-            console.log(result.Name)
+            offset: offset, length: limit, attributesToRetrieve: ['objectID', 'Name', 'Description', 'Images', 'Type', 'Unit_cost']
         })
         res.send(
             {

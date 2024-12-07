@@ -24,7 +24,8 @@ export class User {
         return newUser
     }
     async getUserOrders() {
-        const users = collOrders.where("userId", "==", this.id)
-        users.get().then(e => e.docs.map(i => { return i.data() }))
+        const users = await collOrders.where("userId", "==", this.id);
+        const orders = (await users.get()).docs.map((i) => { const orders = i.data(); return orders })
+        return orders
     }
 }

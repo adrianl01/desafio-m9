@@ -23,7 +23,8 @@ export default async function createOrder(req: NextApiRequest, res: NextApiRespo
                 title: resProduct.Name,
                 description: resProduct.Description,
                 picture_url: resProduct.Images[0].url,
-                category_id: resProduct.Type
+                category_id: resProduct.Type,
+                price: resProduct.Unit_cost
             },
             productId,
             userId: decodedToken.userId,

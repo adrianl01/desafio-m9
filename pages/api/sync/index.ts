@@ -10,6 +10,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     }).eachPage(
         async function page(records, fetchNextPage) {
             const objects = records.map(r => {
+                console.log(r.fields.Images)
                 return {
                     objectID: r.id,
                     ...r.fields

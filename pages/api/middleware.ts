@@ -3,6 +3,7 @@
 import type { NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
+    console.log("middleware de apx")
     if (req.method == "OPTIONS") {
         return new Response(null, {
             status: 204,
