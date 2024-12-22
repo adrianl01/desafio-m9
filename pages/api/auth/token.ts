@@ -11,6 +11,7 @@ export default async function token(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === "POST") {
 
         const { email, code } = req.body as any;
+        console.log(req.body)
         console.log("function api token");
         const newEmail = await Auth.findByEmail(email);
         if (code !== newEmail.data.code) {
