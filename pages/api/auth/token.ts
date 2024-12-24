@@ -10,14 +10,18 @@ export default async function token(req: NextApiRequest, res: NextApiResponse) {
     await runMiddleware(req, res);
     if (req.method === "POST") {
 
-        const { email, code } = req.body as any;
+        const { email, code } = req.body;
+        const parsedCode = JSON.parse(code) as number
+
         console.log(req.body)
         console.log("function api token");
         const newEmail = await Auth.findByEmail(email);
-        if (code !== newEmail.data.code) {
+        if (parsedCode !== newEmail.data.code) {
+            console.log("token incorrecto:", parsedCode)
             res.status(401).send({ message: "Token Incorrecto" })
         }
         if (newEmail.data.validCode == false) {
+            console.log("token inválido,", newEmail.data.validCode)
             res.status(401).send({ message: "Token Inválido" })
         }
         console.log("continúa")
