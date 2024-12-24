@@ -18,7 +18,6 @@ export default async function address(req: NextApiRequest, res: NextApiResponse)
         } else {
             res.status(401).send({ message: "token no autorizado" })
         }
-        res.send({ message: "patch method" })
     } else {
         res.send({ message: "Method Not Allowed" })
     }
