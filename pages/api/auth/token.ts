@@ -9,7 +9,6 @@ import { runMiddleware } from "../../../lib/corsMiddleware";
 export default async function token(req: NextApiRequest, res: NextApiResponse) {
     await runMiddleware(req, res);
     if (req.method === "POST") {
-
         const { email, code } = req.body;
         const parsedCode = JSON.parse(code) as number
 

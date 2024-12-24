@@ -7,8 +7,8 @@ import { middleware } from "../middleware";
 import { runMiddleware } from "../../../lib/corsMiddleware";
 
 export default async function me(req: NextApiRequest, res: NextApiResponse) {
+    await runMiddleware(req, res);
     if (req.method === "GET") {
-        await runMiddleware(req, res);
         const token = parseToken(req);
         if (!token) {
             res.status(401).send({ message: "no hay token" })
