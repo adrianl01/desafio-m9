@@ -14,7 +14,6 @@ export default async function me(req: NextApiRequest, res: NextApiResponse) {
             res.status(401).send({ message: "no hay token" })
         }
         const decodedToken = decode(token) as any
-        console.log(decodedToken)
         if (decodedToken) {
             const user = await getUserById(decodedToken.userId)
             res.send(user)
@@ -34,7 +33,6 @@ export default async function me(req: NextApiRequest, res: NextApiResponse) {
         } else {
             res.status(401).send({ message: "token no autorizado" })
         }
-        res.send({ message: "patch method" })
     } else {
         res.send({ message: "Method Not Allowed" })
     }
