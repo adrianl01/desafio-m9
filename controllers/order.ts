@@ -1,7 +1,6 @@
 import { firestore } from "../lib/firestore";
 const collOrders = firestore.collection("orders");
 
-
 type OrderData = {
     additionalInfo: "",
     status: "pending" | "paid" | "failed",
@@ -24,7 +23,6 @@ export class Order {
     async push() {
         this.ref.update(this.data)
     }
-
     static async createNewOrder(newOrderdata = {}) {
         console.log("create New Order")
         console.log(newOrderdata)

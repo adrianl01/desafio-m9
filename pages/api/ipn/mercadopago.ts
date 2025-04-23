@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getMerchOrder } from "../../../lib/mercadoPago";
-import { Order } from "../../../models/order";
+import { Order } from "../../../controllers/order";
 import methods from "micro-method-router"
 import { runMiddleware } from "../../../lib/corsMiddleware";
 

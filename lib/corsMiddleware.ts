@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import Cors from "cors";
 
 const cors = Cors({
-    origin: "*" || "http://localhost:3000",
+    origin: "*",
     methods: ["GET", "POST", "PATCH", "DELETE", "PUT", "OPTIONS", "HEAD"],
     preflightContinue: false,
     optionsSuccessStatus: 204,

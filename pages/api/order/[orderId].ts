@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import parseToken from "parse-bearer-token"
 import { decode } from "jsonwebtoken";
-import { Order } from "../../../models/order";
+import { Order } from "../../../controllers/order";
 import { runMiddleware } from "../../../lib/corsMiddleware";
 
 export default async function order(req: NextApiRequest, res: NextApiResponse) {

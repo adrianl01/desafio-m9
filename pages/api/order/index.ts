@@ -2,14 +2,14 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { generatePreference } from "../../../lib/mercadoPago";
 import parseToken from "parse-bearer-token"
 import { User } from "../../../models/users";
-import { Order } from "../../../models/order";
+import { Order } from "../../../controllers/order";
 import { decode } from "../../../lib/jwt";
 import { productIndex } from "../../../lib/algolia";
 import { runMiddleware } from "../../../lib/corsMiddleware";
 
 export default async function createOrder(req: NextApiRequest, res: NextApiResponse) {
     await runMiddleware(req, res)
-    if (req.method === "POST") {
+    if (req.method === "GET") {
         const { productId } = req.query as any;
         const token = parseToken(req) as any;
         const decodedToken = await decode(token) as any;
