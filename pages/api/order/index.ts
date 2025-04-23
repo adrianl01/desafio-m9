@@ -9,10 +9,10 @@ import { runMiddleware } from "../../../lib/corsMiddleware";
 
 export default async function createOrder(req: NextApiRequest, res: NextApiResponse) {
     await runMiddleware(req, res)
-    if (req.method === "GET") {
+    if (req.method === "POST") {
         console.log("createOrder")
-        console.log(req.query)
-        const { productId } = req.query as any;
+        console.log(req.body)
+        const { productId } = req.body as any;
         const token = parseToken(req) as any;
         const decodedToken = await decode(token) as any;
         console.log("decodedToke", decodedToken);
