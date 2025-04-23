@@ -3,7 +3,6 @@ import methods from "micro-method-router"
 import parseToken from "parse-bearer-token"
 import { decode } from "jsonwebtoken";
 import { getUserById, updateAddtionalUserData, updateUserAddress } from "../../../controllers/users";
-import { middleware } from "../../middleware";
 import { runMiddleware } from "../../../lib/corsMiddleware";
 
 export default async function me(req: NextApiRequest, res: NextApiResponse) {
