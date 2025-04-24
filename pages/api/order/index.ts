@@ -28,6 +28,7 @@ export default async function createOrder(req: NextApiRequest, res: NextApiRespo
                 category_id: resProduct.Type,
                 price: resProduct.Unit_cost
             },
+            orderId: resProduct.objectID,
             productId,
             userId: decodedToken.userId,
             status: "pending"
@@ -45,7 +46,7 @@ export default async function createOrder(req: NextApiRequest, res: NextApiRespo
                         category_id: resProduct.Type,
                         quantity: 1,
                         currency_id: "ARS",
-                        unit_price: resProduct.Unit_cost
+                        unit_price: resProduct.Unit_cost,
                     }
                 ],
                 back_urls: {
@@ -54,7 +55,7 @@ export default async function createOrder(req: NextApiRequest, res: NextApiRespo
                     failure: "http://test.com/failure"
                 },
                 external_reference: order.id,
-                notification_url: "https://flujo-de-pago-git-main-adrians-projects-c7d56fd4.vercel.app/api/webhooks/mercadopago"
+                notification_url: "https://desafio-m9-endpoints.vercel.app/api/ipn/mercadopago"
             }
         })
         res.send({
