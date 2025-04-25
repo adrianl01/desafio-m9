@@ -28,8 +28,7 @@ export default async function createOrder(req: NextApiRequest, res: NextApiRespo
                 category_id: resProduct.Type,
                 price: resProduct.Unit_cost
             },
-            orderId: resProduct.objectID,
-            productId,
+            orderId: productId,
             userId: decodedToken.userId,
             status: "pending"
         })
