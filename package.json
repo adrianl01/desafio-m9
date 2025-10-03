@@ -28,9 +28,12 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next"
+    "start": "next",
+    "test": "jest"
   },
   "devDependencies": {
-    "@types/react": "18.3.3"
+    "@types/jest": "^30.0.0",
+    "@types/react": "18.3.3",
+    "jest": "^30.0.4"
   }
 }

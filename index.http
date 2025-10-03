@@ -1,0 +1,9 @@
+api\auth\token
+
+POST http://localhost:3001/api/auth/token HTTP/1.1
+content-type: application/json
+
+{
+    "email": "gustavo.adrian.leiva879@gmail.com",
+    "status":"authenticated"
+}

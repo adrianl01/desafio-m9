@@ -26,7 +26,7 @@ export async function findOrCreateAuth(email: string): Promise<Auth> {
     }
 }
 
-export async function sendCode(email: string) {
+export async function createCode(email: string) {
     const auth = await findOrCreateAuth(email);
     const code = await random.intBetween(10000, 99999)
     console.log("code:", code)
