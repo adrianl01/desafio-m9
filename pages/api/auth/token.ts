@@ -1,9 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import methods from "micro-method-router";
 import { compareAsc } from "date-fns";
 import { generate } from "../../../lib/jwt";
 import { Auth } from "../../../models/auth";
-import { findOrCreateAuth } from "../../../controllers/auth";
 import { runMiddleware } from "../../../lib/corsMiddleware";
 
 export default async function token(req: NextApiRequest, res: NextApiResponse) {
@@ -17,10 +15,6 @@ export default async function token(req: NextApiRequest, res: NextApiResponse) {
         console.log("token incorrecto:", parsedCode);
         res.status(401).send({ message: "Wrong Token" });
       }
-      if (newEmail.data.validCode == false) {
-        console.log("token inválido,", newEmail.data.validCode);
-        res.status(401).send({ message: "Invalid Token" });
-      }
       const date = newEmail.data.expires.toDate();
       const currentDate = new Date();
       const expDate = compareAsc(date, currentDate);
@@ -29,14 +23,8 @@ export default async function token(req: NextApiRequest, res: NextApiResponse) {
       } else if (expDate !== -1) {
         // token se genera en base del userId
         const token = generate({ userId: newEmail.data.userId });
-        const auth = await findOrCreateAuth(email);
-        auth.data.validCode = false;
-        await auth.push();
         res.send({ token });
       }
-    } else if (status === "authenticated") {
-      const token = generate({ userId: newEmail.data.userId });
-      res.send({ token });
     }
   } else {
     res.send({ message: "Method Not Allowed" });

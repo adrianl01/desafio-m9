@@ -4,27 +4,22 @@ import { sendEmail } from "../../../lib/mailjet";
 import { runMiddleware } from "../../../lib/corsMiddleware";
 
 export default async function auth(req: NextApiRequest, res: NextApiResponse) {
-    await runMiddleware(req, res);
-    if (req.method === "POST") {
-        const { email } = req.body;
-        if (!email) {
-            res
-                .status(400)
-                .json({ message: "Debes ingresar un email para poder ingresar." });
-        }
-        const auth = await createCode(email)
-        // email sender comentado pero funcionando😉
-        await sendEmail(auth.data)
-        res.send(auth.data)
-    } else {
-        res.send({ message: "Method Not Allowed" })
+  await runMiddleware(req, res);
+  if (req.method === "POST") {
+    const { email } = req.body;
+    if (!email) {
+      return res
+        .status(400)
+        .json({ message: "Debes ingresar un email para poder ingresar." });
     }
-
+    const auth = await createCode(email);
+    // email sender comentado pero funcionando😉
+    await sendEmail(auth.data);
+    res.send(auth.data);
+  } else {
+    res.send({ message: "Method Not Allowed" });
+  }
 }
-
-
-
-
 
 // CONCEPTOS MVC
 // los endpoints sólo reciben y checkean las req y querys
@@ -47,7 +42,6 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
 // "compará esto", "guardá este user", "modificá esto"
 // si se respetan las capas, es mas fácil detectar errores
 // lib no pertenece al sistema de capas
-
 
 // si puedo escribir hasta donde llegan las responsabilidades
 // de cada capa, y día a día ir agregando detalles sobre cada capa
