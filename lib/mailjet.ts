@@ -10,7 +10,7 @@ export async function sendEmail(emaildata) {
     Messages: [
       {
         From: {
-          Email: "adrianl01@weshop-ecommerce.vercel.app",
+          Email: "gustavo.adrian.leiva879@gmail.com",
         },
         To: [
           {
