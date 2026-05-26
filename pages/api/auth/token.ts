@@ -19,14 +19,14 @@ export default async function token(req: NextApiRequest, res: NextApiResponse) {
       const currentDate = new Date();
       const expDate = compareAsc(date, currentDate);
       if (expDate == -1) {
-        res.send({ message: "código expirado" });
+        res.status(401).send({ message: "Expired Token" });
       } else if (expDate !== -1) {
         // token se genera en base del userId
         const token = generate({ userId: newEmail.data.userId });
-        res.send({ token });
+        res.status(200).send({ token });
       }
     }
   } else {
-    res.send({ message: "Method Not Allowed" });
+    res.status(405).send({ message: "Method Not Allowed" });
   }
 }

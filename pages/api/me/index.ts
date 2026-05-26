@@ -15,9 +15,9 @@ export default async function me(req: NextApiRequest, res: NextApiResponse) {
         const decodedToken = decode(token) as any
         if (decodedToken) {
             const user = await getUserById(decodedToken.userId)
-            res.send(user)
+            res.status(200).send(user)
         } else {
-            res.status(401).send({ message: "token no autorizado" })
+            res.status(401).send({ message: "unauthorized" })
         }
     } else if (req.method === "PATCH") {
         const { additionalUserData } = req.body
@@ -28,12 +28,12 @@ export default async function me(req: NextApiRequest, res: NextApiResponse) {
         const decodedToken = decode(token) as any
         if (decodedToken) {
             const newUserData = await updateAddtionalUserData(decodedToken.userId, additionalUserData)
-            res.send(newUserData)
+            res.status(200).send(newUserData)
         } else {
-            res.status(401).send({ message: "token no autorizado" })
+            res.status(401).send({ message: "unauthorized" })
         }
     } else {
-        res.send({ message: "Method Not Allowed" })
+        res.status(405).send({ message: "Method Not Allowed" })
     }
 }
 

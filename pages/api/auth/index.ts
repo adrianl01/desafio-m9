@@ -10,14 +10,14 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
     if (!email) {
       return res
         .status(400)
-        .json({ message: "Debes ingresar un email para poder ingresar." });
+        .json({ message: "You need to provide an email address" });
     }
     const auth = await createCode(email);
     // email sender comentado pero funcionando😉
     await sendEmail(auth.data);
-    res.send(auth.data);
+    res.status(200).send(auth.data);
   } else {
-    res.send({ message: "Method Not Allowed" });
+    res.status(405).send({ message: "Method Not Allowed" });
   }
 }
 
