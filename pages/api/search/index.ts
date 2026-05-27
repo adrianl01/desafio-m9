@@ -17,11 +17,11 @@ export default async function search(req: NextApiRequest, res: NextApiResponse) 
   }
 
   try {
-    const { search } = req.query;
+    const { search } = req.query as { search?: string };
 
-    if (!search || typeof search !== 'string') {
-      throw new Error('Missing search query');
-    }
+    // if (!search || typeof search !== 'string') {
+    //   throw new Error('Missing search query');
+    // }
 
     const { offset, limit } = getOffsetAndLimitFromReq(req);
 
