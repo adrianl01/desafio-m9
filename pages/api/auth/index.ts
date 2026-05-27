@@ -1,23 +1,40 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { createCode } from "../../../controllers/auth";
-import { sendEmail } from "../../../lib/mailjet";
-import { runMiddleware } from "../../../lib/corsMiddleware";
+import { NextApiRequest, NextApiResponse } from 'next';
+import { createCode } from '../../../controllers/auth';
+import { sendEmail } from '../../../lib/mailjet';
+import { runMiddleware } from '../../../lib/corsMiddleware';
 
 export default async function auth(req: NextApiRequest, res: NextApiResponse) {
   await runMiddleware(req, res);
-  if (req.method === "POST") {
+
+  if (req.method !== 'POST') {
+    return res.status(405).json({
+      message: 'Method Not Allowed'
+    });
+  }
+
+  try {
     const { email } = req.body;
+
     if (!email) {
-      return res
-        .status(400)
-        .json({ message: "You need to provide an email address" });
+      return res.status(400).json({
+        message: 'You need to provide an email address'
+      });
     }
+
     const auth = await createCode(email);
-    // email sender comentado pero funcionando😉
+
     await sendEmail(auth.data);
-    res.status(200).send(auth.data);
-  } else {
-    res.status(405).send({ message: "Method Not Allowed" });
+
+    return res.status(200).json({
+      ok: true,
+      message: 'Code generated successfully'
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      message: 'Internal server error'
+    });
   }
 }
 

@@ -1,14 +1,32 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { productIndex } from "../../../lib/algolia";
 import { runMiddleware } from "../../../lib/corsMiddleware";
+import { handleApiError } from "../../../lib/handleApiError";
+import { getProductById } from "../../../controllers/product";
 
-export default async function productId(req: NextApiRequest, res: NextApiResponse) {
-    await runMiddleware(req, res)
-    if (req.method === "GET") {
-        const productId = req.query.productId as any
-        const resProduct = await productIndex.getObject(productId)
-        res.send(resProduct)
-    } else {
-        res.send({ message: "Method Not Allowed" })
+export default async function productById(req: NextApiRequest, res: NextApiResponse) {
+  await runMiddleware(req, res);
+
+  if (req.method !== "GET") {
+    return res.status(405).json({
+      message: "Method Not Allowed",
+    });
+  }
+
+  try {
+    const { productId } = req.query;
+
+    if (!productId || typeof productId !== "string") {
+      throw new Error("Invalid data");
     }
+
+    const product = await getProductById(productId);
+
+    if (!product) {
+      throw new Error("Product not found");
+    }
+
+    return res.status(200).json(product);
+  } catch (error) {
+    return handleApiError(res, error);
+  }
 }

@@ -1,26 +1,34 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+
 import { getOffsetAndLimitFromReq } from '../../../lib/requests';
-import { productIndex } from '../../../lib/algolia';
+
 import { runMiddleware } from '../../../lib/corsMiddleware';
+
+import { handleApiError } from '../../../lib/handleApiError';
+import { searchProducts } from '../../../controllers/product';
 
 export default async function search(req: NextApiRequest, res: NextApiResponse) {
   await runMiddleware(req, res);
-  if (req.method === 'GET') {
+
+  if (req.method !== 'GET') {
+    return res.status(405).json({
+      message: 'Method Not Allowed'
+    });
+  }
+
+  try {
+    const { search } = req.query;
+
+    if (!search || typeof search !== 'string') {
+      throw new Error('Missing search query');
+    }
+
     const { offset, limit } = getOffsetAndLimitFromReq(req);
-    const results = await productIndex.search(req.query.search as string, {
-      offset: offset,
-      length: limit,
-      attributesToRetrieve: ['objectID', 'Name', 'Description', 'Images', 'Type', 'Unit_cost', 'Settings', 'Vendor']
-    });
-    res.send({
-      results: results.hits,
-      pagination: {
-        offset: offset,
-        limit: limit,
-        total: results.nbHits
-      }
-    });
-  } else {
-    res.send({ message: 'Method Not Allowed' });
+
+    const data = await searchProducts(search, offset, limit);
+
+    return res.status(200).json(data);
+  } catch (error) {
+    return handleApiError(res, error);
   }
 }

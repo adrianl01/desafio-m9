@@ -1,41 +1,55 @@
 import { User } from "../models/users";
 import { Auth } from "../models/auth";
-import gen from "random-seed";
 import { addMinutes } from "date-fns";
-var seed = "asdada";
-var random = gen.create(seed);
 
 export async function findOrCreateAuth(email: string): Promise<Auth> {
   const cleanEmail = email.trim().toLowerCase();
+
   const auth = await Auth.findByEmail(cleanEmail);
+
   if (auth) {
     console.log("auth encontrado");
     return auth;
-  } else {
-    console.log("se crea uno nuevo");
-    const newUser = await User.createNewUser({
-      email: cleanEmail,
-    });
-    const newAuth = await Auth.createNewAuth({
-      email: cleanEmail,
-      userId: newUser.id,
-      code: "",
-      expires: new Date(),
-    });
-    return newAuth;
   }
+
+  console.log("se crea uno nuevo");
+
+  const newUser = await User.createNewUser({
+    email: cleanEmail,
+  });
+
+  const newAuth = await Auth.createNewAuth({
+    email: cleanEmail,
+    userId: newUser.id,
+    code: null,
+    expires: null,
+    validCode: false,
+  });
+
+  return newAuth;
 }
 
 export async function createCode(email: string) {
-  const auth = await findOrCreateAuth(email);
-  console.log("auth en createCode:", auth.data);
-  const code = random.intBetween(10000, 99999);
-  console.log("code:", code);
-  const now = new Date();
-  const twentyMinutesAhead = addMinutes(now, 20);
-  auth.data.code = code;
-  auth.data.expires = twentyMinutesAhead;
+  const cleanEmail = email.trim().toLowerCase();
+
+  const auth = await findOrCreateAuth(cleanEmail);
+
+  let newCode: number;
+
+  do {
+    newCode = Math.floor(10000 + Math.random() * 90000);
+  } while (newCode === auth.data.code);
+
+  const expires = addMinutes(new Date(), 20);
+
+  auth.data.code = newCode;
+  auth.data.expires = expires;
   auth.data.validCode = true;
+
   await auth.push();
+
+  console.log("nuevo código:", newCode);
+  console.log("expira:", expires);
+
   return auth;
 }
